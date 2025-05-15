@@ -79,13 +79,37 @@ class Program
             if (oldEdidParts?[^2]=="SchoolDesk") shopName = $"[DF] {oldEdidParts.Last()} School Desk with {clutter}";
             if (oldEdidParts?[^2]=="Grill") shopName = $"[DF] {oldEdidParts.Last()} Grill with {clutter}";
 
-            IFurniture? furnItem = null;
+            Furniture? furnItem = null;
             // store display versions to be used on store plot later
             if (dynFurn is not null)
             {
-                furnItem = outgoing.Furniture.DuplicateInAsNewRecord(dynFurn);            
+                furnItem = outgoing.Furniture.DuplicateInAsNewRecord(dynFurn);
                 furnItem.EditorID = $"{modPrefix}_DemoFurn_{oldEdid}";
                 furnItem.Name = shopName;
+
+                FormKey WorkshopRelaxationObject = FormKey.Factory("05C2A3:Fallout4.esm");
+                if (furnItem is not null && furnItem.HasKeyword(WorkshopRelaxationObject))
+                    furnItem.Keywords.RemoveWhere(k => k.FormKey == WorkshopRelaxationObject);
+
+                FormKey FurnitureClassRelaxation = FormKey.Factory("18F692:Fallout4.esm");
+                if (furnItem is not null && furnItem.HasKeyword(FurnitureClassRelaxation))
+                    furnItem.Keywords.RemoveWhere(k => k.FormKey == FurnitureClassRelaxation);
+
+                FormKey WorkshopWorkObject = FormKey.Factory("020592:Fallout4.esm");
+                linkCache.TryResolve<IKeywordGetter>(WorkshopWorkObject, out var WorkObjectKeyword);
+                if (furnItem is not null && !furnItem.HasKeyword(WorkshopWorkObject) && WorkObjectKeyword is not null)
+                    furnItem?.Keywords?.Add(WorkObjectKeyword);
+                
+                Console.WriteLine($"FurnitureClassWork: {WorkshopWorkObject}");
+                Console.WriteLine($"ClassWorkKeyword: {WorkObjectKeyword}");
+
+                FormKey FurnitureClassWork = FormKey.Factory("18F691:Fallout4.esm");
+                linkCache.TryResolve<IKeywordGetter>(FurnitureClassWork, out var ClassWorkKeyword);
+                if (furnItem is not null && !furnItem.HasKeyword(FurnitureClassWork) && ClassWorkKeyword is not null)
+                    furnItem?.Keywords?.Add(ClassWorkKeyword);
+
+                Console.WriteLine($"FurnitureClassWork: {FurnitureClassWork}");
+                Console.WriteLine($"ClassWorkKeyword: {ClassWorkKeyword}");
             }
             
             // misc item record / store inventory item
