@@ -74,7 +74,7 @@ class Program
             string clutter = "Clutter";
             if (oldEdidParts?.Last()=="Food") clutter = "Food";
             if (oldEdidParts?.Last()=="Drinks") clutter = "Drinks";
-            if (oldEdidParts?.Last()=="DrinksFood") clutter = "Food & Drinks";
+            if (oldEdidParts?.Last()=="DrinksFood" || oldEdidParts?.Last()=="FoodDrinks") clutter = "Food & Drinks";
             string shopName = $"[DF] {dynFurn?.Name?.ToString()} with {clutter}";
             if (oldEdidParts?[^2]=="SchoolDesk") shopName = $"[DF] {oldEdidParts.Last()} School Desk with {clutter}";
             if (oldEdidParts?[^2]=="Grill") shopName = $"[DF] {oldEdidParts.Last()} Grill with {clutter}";
